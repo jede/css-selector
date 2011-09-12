@@ -4,6 +4,7 @@
 
 (defn input-stream [string] (java.io.ByteArrayInputStream. (.getBytes string "utf-8")))
 
+
 (deftest tag-name-only
   (is (= 1 (count (css-selector/query "name" (input-stream "<name/>")))))
   (is (= 0 (count (css-selector/query "name" (input-stream "<noname/>")))))
@@ -15,5 +16,10 @@
 
 (deftest class-only
   (is (= 1 (count (css-selector/query ".red" (input-stream "<stuff><name class=\"blue\"/><name class=\"red\"/></stuff>"))))))
+
+(deftest hierarchial-name
+  (is (= 0 (count (css-selector/query "description name" (input-stream "<name/>")))))
+  (is (= 1 (count (css-selector/query "description name" (input-stream "<description><name/></description>"))))))
+
 
 (clojure.test/run-tests 'test.css-selector)
