@@ -10,7 +10,8 @@
   (is (= 2 (count (css-selector/query "name" (input-stream "<stuff><name/><name/></stuff>"))))))
 
 (deftest tag-name-with-class
-  (is (= 1 (count (css-selector/query "name.red" (input-stream "<stuff><name class=\"blue\"/><name class=\"red\"/></stuff>"))))))
+  (is (= 1 (count (css-selector/query "name.red" (input-stream "<stuff><name class=\"blue\"/><name class=\"red\"/></stuff>")))))
+  (is (= 0 (count (css-selector/query "name.red" (input-stream "<stuff><noname class=\"blue\"/><noname class=\"red\"/></stuff>"))))))
 
 (deftest class-only
   (is (= 1 (count (css-selector/query ".red" (input-stream "<stuff><name class=\"blue\"/><name class=\"red\"/></stuff>"))))))
