@@ -11,14 +11,16 @@
 
 (defn matcher [selector-string]
   (let [[dummy tag-name class-name] (re-find #"^(\w+)?(?:\.(\w+))?$" selector-string)]
-    (let [tag-fn
+    (let [true-fn
+          (fn [xml-tag] true)
+          tag-fn
           (if tag-name
             (fn [xml-tag] (tag? tag-name xml-tag))
-            (fn [xml-tag] true))
+            true-fn)
           class-fn
           (if class-name
             (fn [xml-tag] (has-class? class-name xml-tag))
-            (fn [xml-tag] true))]
+            true-fn)]
       (fn [xml-tag]
         (and (tag-fn xml-tag) (class-fn xml-tag))))))
 
