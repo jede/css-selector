@@ -12,4 +12,7 @@
 (deftest tag-name-with-class
   (is (= 1 (count (css-selector/query "name.red" (input-stream "<stuff><name class=\"blue\"/><name class=\"red\"/></stuff>"))))))
 
+(deftest class-only
+  (is (= 1 (count (css-selector/query ".red" (input-stream "<stuff><name class=\"blue\"/><name class=\"red\"/></stuff>"))))))
+
 (clojure.test/run-tests 'test.css-selector)

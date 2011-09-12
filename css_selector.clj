@@ -10,17 +10,18 @@
   (= class-name (:class (:attrs xml-tag))))
 
 (defn matcher [selector-string]
-  (let [with-class-re-matcher (re-matcher #"^(\w+)\.(\w+)$" selector-string)]
-    (if (.matches with-class-re-matcher)
-                                        ; "tagname.classname" form
-      (let [[dummy tag-name class-name] (re-groups with-class-re-matcher)]
-          (fn [xml-tag]
-            (and
-             (tag? tag-name xml-tag)
-             (has-class? class-name xml-tag))))
-                                        ; "tagname" form
+  (let [[dummy tag-name class-name] (re-find #"^(\w+)?(?:\.(\w+))?$" selector-string)]
+    (let [tag-fn
+          (if tag-name
+            (fn [xml-tag] (tag? tag-name xml-tag))
+            (fn [xml-tag] true))
+          class-fn
+          (if class-name
+            (fn [xml-tag] (has-class? class-name xml-tag))
+            (fn [xml-tag] true))]
       (fn [xml-tag]
-        (tag? selector-string xml-tag)))))
+        (and (tag-fn xml-tag) (class-fn xml-tag))))))
+
 
 (defn query [selector xml-input]
   (filter (matcher selector)
